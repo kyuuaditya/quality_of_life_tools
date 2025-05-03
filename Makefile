@@ -1,47 +1,43 @@
-all: compile link clean run
+# general Makefile configuration
 
-# Directory where the source files are located
-SourceDirectory = build 
-# Name of the final executable
-ApplicationName = AIFA.exe 
-# Mention the compiler you are using, e.g., g++, clang++, etc.
+# default: all
+all: link clean run
+
+# --- Configuration --- 
+SourceDirectory = source_code_folder 
+ApplicationName = desired_application_name.exe
 Compiler = g++
-# Path to your SFML installation
-SFML_DIR = C:\SFML-2.6.2
-
+SFML_DIR = C:\SFML-2.6.2 # sfml installation location
 MINGW_Libraries = -lmingw32 
-SFML_Libraries = -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network -lsfml-main 
+SFML_Libraries = -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network -lsfml-main
 
-#-------------------------------------------------------------Compile-------------------------------------------------------------#
-
-# Compile each .cpp into a .o
-$(SourceDirectory)/%.o: $(SourceDirectory)/%.cpp
-	$(Compiler) -I"$(SFML_DIR)\include" -c $< -o $@
-
+# --- Source & Object discovery ---
 SOURCES := $(wildcard $(SourceDirectory)/*.cpp)
 OBJECTS := $(SOURCES:.cpp=.o)
 
-# Compile target to trigger all object builds
+# Compile each .cpp to .o
+$(SourceDirectory)/%.o: $(SourceDirectory)/%.cpp
+	$(Compiler) -I"$(SFML_DIR)\include" -c $< -o $@
+
 compile: $(OBJECTS)
 	@echo _____ All source files compiled.
 
-#-------------------------------------------------------------Link-------------------------------------------------------------#
+# Compile the icon resource
+icon: 
+	windres $(SourceDirectory)\resource.rc -o $(SourceDirectory)\resource.o
+	@echo _____ icon resource compiled.
 
-# Links the object files to create the final executable
-link: 
-	$(Compiler) -I"$(SFML_DIR)\include" $(SourceDirectory)/*.o -o $(ApplicationName) -L"$(SFML_DIR)\lib" $(MINGW_Libraries) $(SFML_Libraries)
-	@echo _____ Linked object files to create the executable.
+# Link target - depends on object files AND resource.o
+link: compile icon
+	$(Compiler) -I"$(SFML_DIR)\include" $(OBJECTS) $(SourceDirectory)\resource.o -o $(ApplicationName) -L"$(SFML_DIR)\lib" $(MINGW_Libraries) $(SFML_Libraries)
+	@echo _____ linking objects complete.
 
-#-------------------------------------------------------------Clean-------------------------------------------------------------#
-
-# Cleans up the build directory
-clean: 
+# Clean up .o files
+clean:
 	del /Q "$(SourceDirectory)\*.o" 2>nul || exit 0
-	@echo _____ Cleaned up object files.
+	@echo _____ deleted object files.
 
-#-------------------------------------------------------------Run-------------------------------------------------------------#
-
-# Runs the application
-run: 
+# Run the final executable
+run:
 	./$(ApplicationName)
-	@echo _____ Application executed.
+	@echo _____ application started.
