@@ -1,0 +1,38 @@
+# general Makefile configuration
+
+# default: all
+all: link clean run
+
+# --- Configuration --- 
+SourceDirectory = source_code_folder 
+ApplicationName = desired_application_name.exe
+Compiler = g++
+SFML_DIR = C:\SFML-2.6.2 # sfml installation location
+MINGW_Libraries = -lmingw32 
+SFML_Libraries = -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network -lsfml-main
+
+# --- Source & Object discovery ---
+SOURCES := $(wildcard $(SourceDirectory)/*.cpp)
+OBJECTS := $(SOURCES:.cpp=.o)
+
+# Compile each .cpp to .o
+$(SourceDirectory)/%.o: $(SourceDirectory)/%.cpp
+	$(Compiler) -I"$(SFML_DIR)\include" -c $< -o $@
+
+compile: $(OBJECTS)
+	@echo _____ All source files compiled.
+
+# Link target - depends on object files AND resource.o
+link: compile
+	$(Compiler) -I"$(SFML_DIR)\include" $(OBJECTS) -o $(ApplicationName) -L"$(SFML_DIR)\lib" $(MINGW_Libraries) $(SFML_Libraries)
+	@echo _____ linking objects complete.
+
+# Clean up .o files
+clean:
+	del /Q "$(SourceDirectory)\*.o" 2>nul || exit 0
+	@echo _____ deleted object files.
+
+# Run the final executable
+run:
+	./$(ApplicationName)
+	@echo _____ application started.
