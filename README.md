@@ -13,5 +13,7 @@ A collection of small tools and utilities aimed at improving simple tasks, produ
 
 ##### 💻 How to use:
 
+rename the file as `Makefile` and add it to your build.
+
 ```bash
 mingw32-make        # builds, links, and runs the project
