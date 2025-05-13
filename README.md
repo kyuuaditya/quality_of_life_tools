@@ -4,7 +4,7 @@ A collection of small tools and utilities aimed at improving simple tasks, produ
 
 ## 🛠️ Getting Started
 
-1. This is a `Makefile` for building, linking, and running a SFML application. (with and without icon)
+### 1. This is a `Makefile` for building, linking, and running a SFML application. (with and without icon)
 
 ##### 📁 Project Structure
 | -- `source_code_folder/` – Contains all `.cpp` source files. </br>
@@ -13,7 +13,7 @@ A collection of small tools and utilities aimed at improving simple tasks, produ
 
 ##### 💻 How to use:
 
-rename the file as `Makefile` and add it to your build.
-
+rename the file as `Makefile` and add it to your build. </br>
+run the following command in windows terminal in your source directory
 ```bash
-mingw32-make        # builds, links, and runs the project
+mingw32-make
